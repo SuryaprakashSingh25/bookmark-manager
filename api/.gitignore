@@ -1,0 +1,27 @@
+# Go
+bin/
+*.exe
+*.out
+
+# Go modules
+go.sum
+
+# Env
+.env
+
+# OS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Node (Angular later)
+node_modules/
+dist/
+
+# Docker
+*.tar
