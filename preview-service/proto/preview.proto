@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package preview;
+
+option go_package = "preview-service/proto";
+
+service PreviewService {
+  rpc GetPreview (PreviewRequest) returns (PreviewResponse);
+}
+
+message PreviewRequest {
+  string url = 1;
+}
+
+message PreviewResponse {
+  string title = 1;
+  string description = 2;
+}
