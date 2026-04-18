@@ -2,6 +2,7 @@ package main
 
 import (
 	"bookmark-api/internal/db"
+	"bookmark-api/internal/grpcclient"
 	"bookmark-api/internal/handlers"
 
 	"github.com/gin-gonic/gin"
@@ -9,6 +10,7 @@ import (
 
 func main() {
 	db.InitDB()
+	grpcclient.InitGRPC()
 	r := gin.Default()
 
 	r.GET("/health", func(c *gin.Context) {

@@ -2,7 +2,10 @@ package handlers
 
 import (
 	"bookmark-api/internal/db"
+	"bookmark-api/internal/grpcclient"
 	"bookmark-api/internal/models"
+	pb "bookmark-api/proto"
+	"context"
 	"log"
 	"net/http"
 
@@ -21,17 +24,33 @@ func CreateBookmark(c *gin.Context) {
 		return
 	}
 
+	previewRes, err := grpcclient.Client.GetPreview(
+		context.Background(),
+		&pb.PreviewRequest{
+			Url: req.URL,
+		},
+	)
+
+	if err != nil {
+		previewRes = &pb.PreviewResponse{
+			Title:       "",
+			Description: "",
+		}
+	}
+
 	query := `
-		INSERT INTO bookmarks (url)
-		VALUES ($1)
+		INSERT INTO bookmarks (url,title,description)
+		VALUES ($1,$2,$3)
 		RETURNING id, url, COALESCE(title, ''), COALESCE(description, ''), created_at
 	`
 
 	var bookmark models.Bookmark
 
-	err := db.Conn.QueryRow(
+	err = db.Conn.QueryRow(
 		query,
 		req.URL,
+		previewRes.Title,
+		previewRes.Description,
 	).Scan(
 		&bookmark.ID,
 		&bookmark.URL,
