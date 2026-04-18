@@ -1,22 +1,27 @@
-# Binaries
+# Go
+bin/
 *.exe
-*.exe~
-*.dll
-*.so
-*.dylib
-
-# Test binary
-*.test
-
-# Output of go build
 *.out
 
-# Dependency directories (if any)
-vendor/
+# Go modules
+go.sum
 
-# IDE files
+# Env
+.env
+
+# OS
+.DS_Store
+
+# IDE
 .vscode/
 .idea/
 
-# OS files
-.DS_Store
+# Logs
+*.log
+
+# Node (Angular later)
+node_modules/
+dist/
+
+# Docker
+*.tar
