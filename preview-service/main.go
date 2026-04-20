@@ -2,9 +2,12 @@ package main
 
 import (
 	"context"
+	"io"
 	"log"
 	"net"
 	"net/http"
+	"net/url"
+	"time"
 
 	"golang.org/x/net/html"
 
@@ -18,16 +21,33 @@ type server struct {
 }
 
 func (s *server) GetPreview(ctx context.Context, req *pb.PreviewRequest) (*pb.PreviewResponse, error) {
-	url := req.GetUrl()
+	rawURL := req.GetUrl()
 
-	// Fetch webpage
-	resp, err := http.Get(url)
+	parsedURL, err := url.ParseRequestURI(rawURL)
+	if err != nil {
+		return &pb.PreviewResponse{}, nil
+	}
+
+	client := &http.Client{
+		Timeout: 5 * time.Second,
+	}
+
+	httpReq, err := http.NewRequest("GET", parsedURL.String(), nil)
+	if err != nil {
+		return &pb.PreviewResponse{}, nil
+	}
+
+	httpReq.Header.Set("User-Agent", "Mozilla/5.0")
+
+	resp, err := client.Do(httpReq)
 	if err != nil {
 		return &pb.PreviewResponse{}, nil
 	}
 	defer resp.Body.Close()
 
-	doc, err := html.Parse(resp.Body)
+	limitedReader := io.LimitReader(resp.Body, 1_000_000)
+
+	doc, err := html.Parse(limitedReader)
 	if err != nil {
 		return &pb.PreviewResponse{}, nil
 	}
