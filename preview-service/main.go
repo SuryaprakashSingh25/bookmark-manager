@@ -6,6 +6,8 @@ import (
 	"net"
 	"net/http"
 
+	"golang.org/x/net/html"
+
 	pb "preview-service/proto"
 
 	"google.golang.org/grpc"
@@ -25,14 +27,45 @@ func (s *server) GetPreview(ctx context.Context, req *pb.PreviewRequest) (*pb.Pr
 	}
 	defer resp.Body.Close()
 
-	// VERY SIMPLE parsing (we improve later)
-	buf := make([]byte, 1024)
-	resp.Body.Read(buf)
+	doc, err := html.Parse(resp.Body)
+	if err != nil {
+		return &pb.PreviewResponse{}, nil
+	}
+
+	var title, description string
+
+	var f func(*html.Node)
+	f = func(n *html.Node) {
+		if n.Type == html.ElementNode {
+			if n.Data == "title" && n.FirstChild != nil {
+				title = n.FirstChild.Data
+			}
+			if n.Data == "meta" {
+				var name, content string
+				for _, attr := range n.Attr {
+					if attr.Key == "name" {
+						name = attr.Val
+					}
+					if attr.Key == "content" {
+						content = attr.Val
+					}
+				}
+				if name == "description" {
+					description = content
+				}
+			}
+		}
+		for c := n.FirstChild; c != nil; c = c.NextSibling {
+			f(c)
+		}
+	}
+	f(doc)
 
 	return &pb.PreviewResponse{
-		Title:       string(buf[:50]), // placeholder
-		Description: "Preview fetched",
+		Title:       title,
+		Description: description,
 	}, nil
+
 }
 
 func main() {
