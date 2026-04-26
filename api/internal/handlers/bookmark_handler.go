@@ -2,10 +2,8 @@ package handlers
 
 import (
 	"bookmark-api/internal/db"
-	"bookmark-api/internal/grpcclient"
 	"bookmark-api/internal/models"
-	pb "bookmark-api/proto"
-	"context"
+	"bookmark-api/internal/services"
 	"log"
 	"net/http"
 
@@ -16,6 +14,8 @@ type CreateBookmarkRequest struct {
 	URL string `json:"url" binding:"required"`
 }
 
+var bookmarkService = services.NewBookmarkService()
+
 func CreateBookmark(c *gin.Context) {
 	var req CreateBookmarkRequest
 
@@ -24,44 +24,12 @@ func CreateBookmark(c *gin.Context) {
 		return
 	}
 
-	previewRes, err := grpcclient.Client.GetPreview(
-		context.Background(),
-		&pb.PreviewRequest{
-			Url: req.URL,
-		},
-	)
+	bookmark, err := bookmarkService.CreateBookmark(req.URL)
 
 	if err != nil {
-		previewRes = &pb.PreviewResponse{
-			Title:       "",
-			Description: "",
-		}
-	}
-
-	query := `
-		INSERT INTO bookmarks (url,title,description)
-		VALUES ($1,$2,$3)
-		RETURNING id, url, COALESCE(title, ''), COALESCE(description, ''), created_at
-	`
-
-	var bookmark models.Bookmark
-
-	err = db.Conn.QueryRow(
-		query,
-		req.URL,
-		previewRes.Title,
-		previewRes.Description,
-	).Scan(
-		&bookmark.ID,
-		&bookmark.URL,
-		&bookmark.Title,
-		&bookmark.Description,
-		&bookmark.CreatedAt,
-	)
-
-	if err != nil {
-		log.Printf("CreateBookmark error: %v", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create bookmark"})
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "failed to create bookmark",
+		})
 		return
 	}
 
