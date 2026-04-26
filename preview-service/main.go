@@ -57,20 +57,30 @@ func (s *server) GetPreview(ctx context.Context, req *pb.PreviewRequest) (*pb.Pr
 	var f func(*html.Node)
 	f = func(n *html.Node) {
 		if n.Type == html.ElementNode {
-			if n.Data == "title" && n.FirstChild != nil {
+			if n.Data == "title" && n.FirstChild != nil && title == "" {
 				title = n.FirstChild.Data
 			}
 			if n.Data == "meta" {
-				var name, content string
+				var name, property, content string
 				for _, attr := range n.Attr {
-					if attr.Key == "name" {
+					switch attr.Key {
+					case "name":
 						name = attr.Val
-					}
-					if attr.Key == "content" {
+
+					case "property":
+						property = attr.Val
+
+					case "content":
 						content = attr.Val
 					}
 				}
-				if name == "description" {
+				if name == "description" && description == "" {
+					description = content
+				}
+				if property == "og:title" {
+					title = content
+				}
+				if property == "og:description" {
 					description = content
 				}
 			}
