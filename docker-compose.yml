@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:17
+    container_name: bookmark-postgres
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: bookmarkdb
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  preview-service:
+    build: ./preview-service
+
+    container_name: preview-service
+
+    ports:
+      - "50051:50051"
+
+  api:
+    build: ./api
+
+    container_name: bookmark-api
+
+    ports:
+      - "8080:8080"
+
+    depends_on:
+      - postgres
+      - preview-service
+
+volumes:
+  postgres_data:
