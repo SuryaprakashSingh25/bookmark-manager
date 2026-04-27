@@ -3,11 +3,13 @@ package repositories
 import (
 	"bookmark-api/internal/db"
 	"bookmark-api/internal/models"
+	"context"
 )
 
 type BookmarkRepository struct{}
 
 func (r *BookmarkRepository) Create(
+	ctx context.Context,
 	url string,
 	title string,
 	description string,

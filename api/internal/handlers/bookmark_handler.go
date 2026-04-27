@@ -4,8 +4,10 @@ import (
 	"bookmark-api/internal/db"
 	"bookmark-api/internal/models"
 	"bookmark-api/internal/services"
+	"context"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -24,7 +26,16 @@ func CreateBookmark(c *gin.Context) {
 		return
 	}
 
-	bookmark, err := bookmarkService.CreateBookmark(req.URL)
+	ctx, cancel := context.WithTimeout(
+		c.Request.Context(),
+		3*time.Second,
+	)
+	defer cancel()
+
+	bookmark, err := bookmarkService.CreateBookmark(
+		ctx,
+		req.URL,
+	)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{

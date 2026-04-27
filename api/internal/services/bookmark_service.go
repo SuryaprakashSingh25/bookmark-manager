@@ -19,10 +19,11 @@ func NewBookmarkService() *BookmarkService {
 }
 
 func (s *BookmarkService) CreateBookmark(
+	ctx context.Context,
 	url string,
 ) (*models.Bookmark, error) {
 	previewRes, err := grpcclient.Client.GetPreview(
-		context.Background(),
+		ctx,
 		&pb.PreviewRequest{
 			Url: url,
 		},
@@ -33,6 +34,7 @@ func (s *BookmarkService) CreateBookmark(
 	}
 
 	return s.repo.Create(
+		ctx,
 		url,
 		previewRes.Title,
 		previewRes.Description,

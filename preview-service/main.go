@@ -7,6 +7,7 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"sync"
 	"time"
 
 	"golang.org/x/net/html"
@@ -52,7 +53,9 @@ func (s *server) GetPreview(ctx context.Context, req *pb.PreviewRequest) (*pb.Pr
 		return &pb.PreviewResponse{}, nil
 	}
 
-	var title, description string
+	var title string
+	var description string
+	var mu sync.Mutex
 
 	var f func(*html.Node)
 	f = func(n *html.Node) {
@@ -75,13 +78,19 @@ func (s *server) GetPreview(ctx context.Context, req *pb.PreviewRequest) (*pb.Pr
 					}
 				}
 				if name == "description" && description == "" {
+					mu.Lock()
 					description = content
+					mu.Unlock()
 				}
 				if property == "og:title" {
+					mu.Lock()
 					title = content
+					mu.Unlock()
 				}
 				if property == "og:description" {
+					mu.Lock()
 					description = content
+					mu.Unlock()
 				}
 			}
 		}
