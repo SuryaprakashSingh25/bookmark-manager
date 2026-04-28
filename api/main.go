@@ -5,6 +5,7 @@ import (
 	"bookmark-api/internal/grpcclient"
 	"bookmark-api/internal/handlers"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,6 +13,7 @@ func main() {
 	db.InitDB()
 	grpcclient.InitGRPC()
 	r := gin.Default()
+	r.Use(cors.Default())
 
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "ok"})

@@ -1,0 +1,17 @@
+<div *ngFor="let bookmark of bookmarks">
+
+  <h3>
+    {{ bookmark.title || 'No Title' }}
+  </h3>
+
+  <p>
+    {{ bookmark.description }}
+  </p>
+
+  <a [href]="bookmark.url" target="_blank">
+    {{ bookmark.url }}
+  </a>
+
+  <hr />
+
+</div>
