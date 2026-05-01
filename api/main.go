@@ -33,11 +33,6 @@ func main() {
 
 	r.POST("/bookmarks", handlers.CreateBookmark)
 	r.GET("/bookmarks", handlers.GetBookmarks)
-	r.GET("/health", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"status": "UP",
-		})
-	})
 	srv := &http.Server{
 		Addr:    ":8080",
 		Handler: r,

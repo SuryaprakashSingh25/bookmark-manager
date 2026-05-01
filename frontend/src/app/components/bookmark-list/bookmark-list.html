@@ -1,17 +1,17 @@
-<div *ngFor="let bookmark of bookmarks">
+<div class="bookmark-grid">
+  <div class="bookmark-card" *ngFor="let bookmark of bookmarks">
 
-  <h3>
-    {{ bookmark.title || 'No Title' }}
-  </h3>
+    <h3>
+      {{ bookmark.title || 'No Title' }}
+    </h3>
 
-  <p>
-    {{ bookmark.description }}
-  </p>
+    <p>
+      {{ bookmark.description }}
+    </p>
 
-  <a [href]="bookmark.url" target="_blank">
-    {{ bookmark.url }}
-  </a>
+    <a [href]="bookmark.url" target="_blank">
+      Visit Site
+    </a>
 
-  <hr />
-
+  </div>
 </div>

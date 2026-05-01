@@ -1,8 +1,12 @@
-<h1>Bookmark Manager</h1>
+<div class="container">
+  <h1 class="title">
+    Bookmark Manager
+  </h1>
 
-<app-bookmark-form
-  (bookmarkCreated)="refreshBookmarks()">
-</app-bookmark-form>
+  <app-bookmark-form
+    (bookmarkCreated)="refreshBookmarks()">
+  </app-bookmark-form>
 
-<app-bookmark-list>
-</app-bookmark-list>
+  <app-bookmark-list>
+  </app-bookmark-list>
+</div>
