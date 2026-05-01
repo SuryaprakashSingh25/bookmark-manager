@@ -1,6 +1,7 @@
 package db
 
 import (
+	"bookmark-api/internal/config"
 	"log"
 	"time"
 
@@ -11,7 +12,7 @@ var Conn *pgx.Conn
 
 func InitDB() {
 	var err error
-	connStr := "postgres://postgres:postgres@postgres:5432/bookmarkdb"
+	connStr := config.AppConfig.DBURL
 
 	cfg, err := pgx.ParseURI(connStr)
 	if err != nil {
