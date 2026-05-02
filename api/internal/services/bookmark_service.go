@@ -40,3 +40,10 @@ func (s *BookmarkService) CreateBookmark(
 		previewRes.Description,
 	)
 }
+
+func (s *BookmarkService) DeleteBookmark(
+	ctx context.Context,
+	id int,
+) error {
+	return s.repo.Delete(ctx, id)
+}

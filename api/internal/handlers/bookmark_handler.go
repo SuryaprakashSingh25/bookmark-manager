@@ -7,6 +7,7 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -80,4 +81,32 @@ func GetBookmarks(c *gin.Context) {
 		bookmarks = append(bookmarks, b)
 	}
 	c.JSON(http.StatusOK, bookmarks)
+}
+
+func DeleteBookmark(c *gin.Context) {
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "invalid id",
+		})
+		return
+	}
+	ctx, cancel := context.WithTimeout(
+		c.Request.Context(),
+		3*time.Second,
+	)
+	defer cancel()
+	err = bookmarkService.DeleteBookmark(
+		ctx, id,
+	)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "failed to delete bookmark",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "bookmark deleted",
+	})
 }

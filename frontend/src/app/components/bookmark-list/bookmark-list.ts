@@ -30,4 +30,18 @@ export class BookmarkList implements OnInit{
     });
   }
 
+  deleteBookmark(id:number){
+    this.bookmarkService.deleteBookmark(id)
+    .subscribe({
+      next: () => {
+        this.bookmarks=this.bookmarks.filter(
+          b => b.id !== id
+        );
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+  }
+
 }

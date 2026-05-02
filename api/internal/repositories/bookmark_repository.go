@@ -43,3 +43,18 @@ func (r *BookmarkRepository) Create(
 	}
 	return &bookmark, nil
 }
+
+func (r *BookmarkRepository) Delete(
+	ctx context.Context,
+	id int,
+) error {
+	query := `
+		DELETE FROM bookmarks
+		WHERE id = $1
+	`
+	_, err := db.Conn.Exec(
+		query,
+		id,
+	)
+	return err
+}

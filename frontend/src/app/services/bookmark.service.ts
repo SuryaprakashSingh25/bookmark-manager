@@ -25,4 +25,10 @@ export class BookmarkService {
     );
   }
 
+  deleteBookmark(id: number){
+    return this.http.delete(
+      `${this.apiUrl}/bookmarks/${id}`
+    );
+  }
+
 }

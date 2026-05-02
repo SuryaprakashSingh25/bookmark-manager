@@ -33,6 +33,11 @@ func main() {
 
 	r.POST("/bookmarks", handlers.CreateBookmark)
 	r.GET("/bookmarks", handlers.GetBookmarks)
+	r.DELETE(
+		"/bookmarks/:id",
+		handlers.DeleteBookmark,
+	)
+
 	srv := &http.Server{
 		Addr:    ":8080",
 		Handler: r,

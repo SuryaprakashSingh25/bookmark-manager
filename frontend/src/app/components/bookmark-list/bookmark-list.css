@@ -31,3 +31,17 @@
     text-decoration: none;
     font-weight: bold;
 }
+
+.delete-btn{
+    margin-top: 16px;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #111;
+    color: white;
+}
+
+.delete-btn:hover{
+    opacity: 0.9;
+}
