@@ -6,6 +6,7 @@ import (
 	"bookmark-api/internal/grpcclient"
 	"bookmark-api/internal/handlers"
 	"bookmark-api/internal/logger"
+	"bookmark-api/internal/middleware"
 	"context"
 	"log"
 	"net/http"
@@ -27,13 +28,19 @@ func main() {
 	r := gin.Default()
 	r.Use(cors.Default())
 
+	r.POST("/signup", handlers.Signup)
+	r.POST("/login", handlers.Login)
+
+	authRoutes := r.Group("/")
+	authRoutes.Use(middleware.AuthMiddleware())
+
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "ok"})
 	})
 
-	r.POST("/bookmarks", handlers.CreateBookmark)
-	r.GET("/bookmarks", handlers.GetBookmarks)
-	r.DELETE(
+	authRoutes.POST("/bookmarks", handlers.CreateBookmark)
+	authRoutes.GET("/bookmarks", handlers.GetBookmarks)
+	authRoutes.DELETE(
 		"/bookmarks/:id",
 		handlers.DeleteBookmark,
 	)

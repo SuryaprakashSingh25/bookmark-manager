@@ -11,6 +11,7 @@ type Config struct {
 	Port            string
 	DBURL           string
 	GRPCPreviewAddr string
+	JWTSecret       string
 }
 
 var AppConfig Config
@@ -26,5 +27,6 @@ func LoadConfig() {
 		Port:            os.Getenv("PORT"),
 		DBURL:           os.Getenv("DB_URL"),
 		GRPCPreviewAddr: os.Getenv("GRPC_PREVIEW_ADDR"),
+		JWTSecret:       os.Getenv("JWT_SECRET"),
 	}
 }
