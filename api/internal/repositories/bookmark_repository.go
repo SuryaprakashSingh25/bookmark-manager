@@ -10,13 +10,14 @@ type BookmarkRepository struct{}
 
 func (r *BookmarkRepository) Create(
 	ctx context.Context,
+	userID int64,
 	url string,
 	title string,
 	description string,
 ) (*models.Bookmark, error) {
 	query := `
-	INSERT INTO bookmarks (url,title,description)
-	VALUES ($1,$2,$3)
+	INSERT INTO bookmarks (user_id,url,title,description)
+	VALUES ($1,$2,$3,$4)
 	RETURNING id,
 			  url,
 			  COALESCE(title,''),
@@ -27,6 +28,7 @@ func (r *BookmarkRepository) Create(
 
 	err := db.Conn.QueryRow(
 		query,
+		userID,
 		url,
 		title,
 		description,
@@ -47,14 +49,17 @@ func (r *BookmarkRepository) Create(
 func (r *BookmarkRepository) Delete(
 	ctx context.Context,
 	id int,
+	userID int64,
 ) error {
 	query := `
 		DELETE FROM bookmarks
 		WHERE id = $1
+		AND user_id = $2
 	`
 	_, err := db.Conn.Exec(
 		query,
 		id,
+		userID,
 	)
 	return err
 }

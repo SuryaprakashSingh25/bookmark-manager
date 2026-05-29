@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { BookmarkList } from './components/bookmark-list/bookmark-list';
-import { BookmarkForm } from './components/bookmark-form/bookmark-form';
 import { authGuard } from './auth/auth.guard';
 
 export const routes: Routes = [
@@ -15,18 +14,14 @@ export const routes: Routes = [
     component: SignupComponent,
   },
   {
-    path: '',
+    path: 'create',
+    component: BookmarkList,
     canActivate: [authGuard],
-    children: [
-      {
-        path: '',
-        component: BookmarkList,
-      },
-      {
-        path: 'create',
-        component: BookmarkForm,
-      },
-    ],
+  },
+  {
+    path: 'create',
+    redirectTo: '',
+    pathMatch: 'full',
   },
   {
     path: '**',

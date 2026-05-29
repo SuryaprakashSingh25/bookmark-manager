@@ -20,6 +20,7 @@ func NewBookmarkService() *BookmarkService {
 
 func (s *BookmarkService) CreateBookmark(
 	ctx context.Context,
+	userID int64,
 	url string,
 ) (*models.Bookmark, error) {
 	previewRes, err := grpcclient.Client.GetPreview(
@@ -35,6 +36,7 @@ func (s *BookmarkService) CreateBookmark(
 
 	return s.repo.Create(
 		ctx,
+		userID,
 		url,
 		previewRes.Title,
 		previewRes.Description,
@@ -44,6 +46,7 @@ func (s *BookmarkService) CreateBookmark(
 func (s *BookmarkService) DeleteBookmark(
 	ctx context.Context,
 	id int,
+	userID int64,
 ) error {
-	return s.repo.Delete(ctx, id)
+	return s.repo.Delete(ctx, id, userID)
 }

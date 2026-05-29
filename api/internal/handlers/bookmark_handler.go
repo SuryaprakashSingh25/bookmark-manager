@@ -33,8 +33,11 @@ func CreateBookmark(c *gin.Context) {
 	)
 	defer cancel()
 
+	userID := c.MustGet("user_id").(int64)
+
 	bookmark, err := bookmarkService.CreateBookmark(
 		ctx,
+		userID,
 		req.URL,
 	)
 
@@ -49,13 +52,15 @@ func CreateBookmark(c *gin.Context) {
 }
 
 func GetBookmarks(c *gin.Context) {
+	userID := c.MustGet("user_id").(int64)
 	query := `
 		SELECT id, url, COALESCE(title, ''), COALESCE(description, ''), created_at
 		FROM bookmarks
+		WHERE user_id=$1
 		ORDER BY created_at DESC
 	`
 
-	rows, err := db.Conn.Query(query)
+	rows, err := db.Conn.Query(query, userID)
 	if err != nil {
 		log.Printf("GetBookmarks query error: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch bookmarks"})
@@ -86,6 +91,7 @@ func GetBookmarks(c *gin.Context) {
 func DeleteBookmark(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.Atoi(idParam)
+	userID := c.MustGet("user_id").(int64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "invalid id",
@@ -98,7 +104,7 @@ func DeleteBookmark(c *gin.Context) {
 	)
 	defer cancel()
 	err = bookmarkService.DeleteBookmark(
-		ctx, id,
+		ctx, id, userID,
 	)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{

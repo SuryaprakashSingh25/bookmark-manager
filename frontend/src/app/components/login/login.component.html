@@ -3,31 +3,37 @@
     <h2>Login</h2>
 
     <form (ngSubmit)="login()">
-      <label for="email">Email</label>
-      <input
-        id="email"
-        type="email"
-        [(ngModel)]="email"
-        name="email"
-        required
-        placeholder="you@example.com"
-      />
 
-      <label for="password">Password</label>
-      <input
-        id="password"
-        type="password"
-        [(ngModel)]="password"
-        name="password"
-        required
-        placeholder="Enter your password"
-      />
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          [(ngModel)]="email"
+          name="email"
+          required
+          placeholder="you@example.com"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          [(ngModel)]="password"
+          name="password"
+          required
+          placeholder="Enter your password"
+        />
+      </div>
 
       <button type="submit">Login</button>
     </form>
 
     <p class="auth-footer">
-      Don't have an account? <a routerLink="/signup">Register</a>
+      Don't have an account?
+      <a routerLink="/signup">Register</a>
     </p>
   </div>
 </div>

@@ -26,7 +26,16 @@ func main() {
 	db.InitDB()
 	grpcclient.InitGRPC()
 	r := gin.Default()
-	r.Use(cors.Default())
+	r.Use(cors.New(cors.Config{
+		AllowOrigins: []string{
+			"https://bookmark-frontend-rho.vercel.app",
+			"http://localhost:4200",
+		},
+		AllowHeaders:     []string{"Content-Type", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
 	r.POST("/signup", handlers.Signup)
 	r.POST("/login", handlers.Login)

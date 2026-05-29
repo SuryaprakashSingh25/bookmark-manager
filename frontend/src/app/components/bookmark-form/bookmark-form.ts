@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-bookmark-form',
   imports: [FormsModule],
   templateUrl: './bookmark-form.html',
-  styleUrl: './bookmark-form.css',
+  styleUrls: ['./bookmark-form.css'],
 })
 export class BookmarkForm {
   url='';

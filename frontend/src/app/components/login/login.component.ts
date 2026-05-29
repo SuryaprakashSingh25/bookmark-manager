@@ -8,7 +8,7 @@ import { Router, RouterLink } from "@angular/router";
     standalone: true,
     imports:[FormsModule, RouterLink],
     templateUrl:'./login.component.html',
-    styleUrl: './login.component.css'
+    styleUrls: ['./login.component.css']
 })
 export class LoginComponent{
     email=''
@@ -27,7 +27,7 @@ export class LoginComponent{
         .subscribe({
             next:(res)=>{
                 this.authService.saveToken(res.token);
-                this.router.navigate(['/']);
+                this.router.navigate(['/create']);
             }
         });
     }

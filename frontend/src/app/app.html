@@ -1,4 +1,8 @@
 <div class="container">
-  <h1 class="title">Bookmark Manager</h1>
+  <div class="header">
+    <h1 *ngIf="isLoggedIn()" class="title">Bookmark Manager</h1>
+    <button *ngIf="isLoggedIn()" class="logout-btn" (click)="logout()">Logout</button>
+  </div>
+
   <router-outlet></router-outlet>
 </div>

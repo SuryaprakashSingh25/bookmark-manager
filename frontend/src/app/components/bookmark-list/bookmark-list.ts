@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Bookmark } from '../../models/bookmark';
 import { BookmarkService } from '../../services/bookmark.service';
 import { CommonModule } from '@angular/common';
+import { BookmarkForm } from '../bookmark-form/bookmark-form';
 
 @Component({
   selector: 'app-bookmark-list',
-  imports: [CommonModule],
+  imports: [CommonModule, BookmarkForm],
   templateUrl: './bookmark-list.html',
-  styleUrl: './bookmark-list.css',
+  styleUrls: ['./bookmark-list.css'],
 })
 export class BookmarkList implements OnInit{
   bookmarks: Bookmark[]=[];

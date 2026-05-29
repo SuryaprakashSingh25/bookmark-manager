@@ -55,6 +55,7 @@ func InitDB() {
 	createTableQuery := `
 	CREATE TABLE IF NOT EXISTS bookmarks (
 	id SERIAL PRIMARY KEY,
+	user_id INTEGER REFERENCES users(id),
 	url TEXT NOT NULL,
 	title TEXT,
 	description TEXT,
@@ -66,6 +67,16 @@ func InitDB() {
 
 	if err != nil {
 		log.Fatal("Failed to create table:", err)
+	}
+
+	alterQuery := `
+	ALTER TABLE bookmarks
+	ADD COLUMN IF NOT EXISTS user_id INTEGER REFERENCES users(id);
+	`
+
+	_, err = Conn.Exec(alterQuery)
+	if err != nil {
+		log.Fatal("Failed to alter bookmarks table:", err)
 	}
 
 }
