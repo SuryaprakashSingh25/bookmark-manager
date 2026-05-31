@@ -2,11 +2,13 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"io"
 	"log"
 	"net"
 	"net/http"
 	"net/url"
+	"strings"
 	"sync"
 	"time"
 
@@ -19,6 +21,66 @@ import (
 
 type server struct {
 	pb.UnimplementedPreviewServiceServer
+}
+
+func extractTitleFromJSON(data map[string]interface{}) string {
+	// Try common JSON-LD title fields
+	if title, ok := data["name"].(string); ok && title != "" {
+		return title
+	}
+	if title, ok := data["headline"].(string); ok && title != "" {
+		return title
+	}
+	return ""
+}
+
+func extractDescriptionFromJSON(data map[string]interface{}) string {
+	// Try common JSON-LD description fields
+	if desc, ok := data["description"].(string); ok && desc != "" {
+		return desc
+	}
+	if desc, ok := data["about"].(string); ok && desc != "" {
+		return desc
+	}
+	return ""
+}
+
+func parseJSONLD(n *html.Node) (string, string) {
+	var title, description string
+
+	var f func(*html.Node)
+	f = func(n *html.Node) {
+		if n.Type == html.ElementNode && n.Data == "script" {
+			var scriptType string
+			for _, attr := range n.Attr {
+				if attr.Key == "type" && attr.Val == "application/ld+json" {
+					scriptType = attr.Val
+					break
+				}
+			}
+
+			if scriptType == "application/ld+json" && n.FirstChild != nil {
+				jsonStr := strings.TrimSpace(n.FirstChild.Data)
+
+				var data map[string]interface{}
+				if err := json.Unmarshal([]byte(jsonStr), &data); err == nil {
+					if t := extractTitleFromJSON(data); t != "" && title == "" {
+						title = t
+					}
+					if d := extractDescriptionFromJSON(data); d != "" && description == "" {
+						description = d
+					}
+				}
+			}
+		}
+
+		for c := n.FirstChild; c != nil; c = c.NextSibling {
+			f(c)
+		}
+	}
+	f(n)
+
+	return title, description
 }
 
 func (s *server) GetPreview(ctx context.Context, req *pb.PreviewRequest) (*pb.PreviewResponse, error) {
@@ -99,6 +161,17 @@ func (s *server) GetPreview(ctx context.Context, req *pb.PreviewRequest) (*pb.Pr
 		}
 	}
 	f(doc)
+
+	// Fallback to JSON-LD if title or description not found
+	if title == "" || description == "" {
+		jsonTitle, jsonDesc := parseJSONLD(doc)
+		if title == "" {
+			title = jsonTitle
+		}
+		if description == "" {
+			description = jsonDesc
+		}
+	}
 
 	return &pb.PreviewResponse{
 		Title:       title,
