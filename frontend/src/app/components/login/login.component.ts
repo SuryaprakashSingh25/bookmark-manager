@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { AuthService } from "../../services/auth.service";
 import { Router, RouterLink } from "@angular/router";
+import { ToasterService } from "../../services/toaster.service";
 
 @Component({
     selector:'app-login',
@@ -16,7 +17,8 @@ export class LoginComponent{
 
     constructor(
         private authService:AuthService,
-        private router:Router
+        private router:Router,
+        private toaster: ToasterService
     ){}
 
     login(){
@@ -28,6 +30,10 @@ export class LoginComponent{
             next:(res)=>{
                 this.authService.saveToken(res.token);
                 this.router.navigate(['/create']);
+            },
+            error: (err) => {
+                console.error(err);
+                this.toaster.showError('Login failed. Check your credentials and try again.');
             }
         });
     }

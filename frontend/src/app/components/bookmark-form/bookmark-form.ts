@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { BookmarkService } from '../../services/bookmark.service';
+import { ToasterService } from '../../services/toaster.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -14,11 +15,13 @@ export class BookmarkForm {
   bookmarkCreated=new EventEmitter<void>();
 
   constructor(
-    private bookmarkService: BookmarkService
+    private bookmarkService: BookmarkService,
+    private toaster: ToasterService
   ){}
 
   submit(){
     if(!this.url.trim()){
+      this.toaster.showError('Please enter a valid URL for the bookmark.');
       return;
     }
 
@@ -30,6 +33,7 @@ export class BookmarkForm {
       },
       error: (err) => {
         console.error(err);
+        this.toaster.showError('Unable to create bookmark. Please try again.');
       }
     });
   }

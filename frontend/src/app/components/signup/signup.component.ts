@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { AuthService } from "../../services/auth.service";
 import { Router, RouterLink } from "@angular/router";
+import { ToasterService } from "../../services/toaster.service";
 
 @Component({
     selector:'app-signup',
@@ -17,7 +18,8 @@ export class SignupComponent {
 
     constructor(
         private authService: AuthService,
-        private router: Router
+        private router: Router,
+        private toaster: ToasterService
     ) {}
 
     signup() {
@@ -29,6 +31,10 @@ export class SignupComponent {
         .subscribe({
             next: () => {
                 this.router.navigate(['/login']);
+            },
+            error: (err) => {
+                console.error(err);
+                this.toaster.showError('Signup failed. Please check your information and try again.');
             }
         });
     }

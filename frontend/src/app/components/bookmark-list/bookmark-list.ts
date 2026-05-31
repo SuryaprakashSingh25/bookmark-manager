@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Bookmark } from '../../models/bookmark';
 import { BookmarkService } from '../../services/bookmark.service';
+import { ToasterService } from '../../services/toaster.service';
 import { CommonModule } from '@angular/common';
 import { BookmarkForm } from '../bookmark-form/bookmark-form';
 
@@ -13,7 +14,10 @@ import { BookmarkForm } from '../bookmark-form/bookmark-form';
 export class BookmarkList implements OnInit{
   bookmarks: Bookmark[]=[];
 
-  constructor(private bookmarkService: BookmarkService){}
+  constructor(
+    private bookmarkService: BookmarkService,
+    private toaster: ToasterService
+  ){}
 
   ngOnInit(): void {
     this.loadBookmarks();
@@ -23,10 +27,11 @@ export class BookmarkList implements OnInit{
     this.bookmarkService.getBookmarks()
     .subscribe({
       next: (data) => {
-        this.bookmarks=data;
+        this.bookmarks = data;
       },
       error: (err) => {
         console.error(err);
+        this.toaster.showError('Could not load bookmarks. Please try again.');
       }
     });
   }
@@ -35,12 +40,13 @@ export class BookmarkList implements OnInit{
     this.bookmarkService.deleteBookmark(id)
     .subscribe({
       next: () => {
-        this.bookmarks=this.bookmarks.filter(
+        this.bookmarks = this.bookmarks.filter(
           b => b.id !== id
         );
       },
       error: (err) => {
         console.error(err);
+        this.toaster.showError('Failed to delete bookmark. Please try again.');
       }
     });
   }
