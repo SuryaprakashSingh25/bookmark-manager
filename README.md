@@ -1,6 +1,6 @@
 # 🔖 Bookmark Manager
 
-A full-stack distributed application to save, manage, and preview bookmarks with a modern microservices architecture.
+A full-stack distributed bookmark management application built with **Go, Angular, gRPC, PostgreSQL, and JWT Authentication**. The project demonstrates microservices architecture, secure user authentication, and modern frontend/backend development practices.
 
 ---
 
@@ -13,14 +13,18 @@ A full-stack distributed application to save, manage, and preview bookmarks with
 
 ## 🧠 Overview
 
-This project demonstrates a production-style system built using **Go, Angular, gRPC, and PostgreSQL**, focusing on scalability, clean architecture, and real-world backend patterns.
+Bookmark Manager is a production-style distributed application that allows users to securely save and manage bookmarks through an intuitive interface.
+
+The application follows a microservices architecture where a REST API communicates with a dedicated gRPC service for bookmark preview generation.
 
 Users can:
 
+* Create an account and securely log in
 * Add bookmarks with title & description
 * View bookmarks in a clean card-based UI
 * Delete bookmarks
-* Preview metadata using a separate gRPC service
+* Preview bookmark metadata through a gRPC service
+* Access protected features using JWT-based authentication
 
 ---
 
@@ -28,6 +32,8 @@ Users can:
 
 ```text
 Angular (Vercel)
+        ↓
+JWT Authentication
         ↓
 Go REST API (Render)
         ↓
@@ -43,6 +49,7 @@ PostgreSQL (Supabase)
 ### Backend
 
 * Go (Gin)
+* JWT Authentication
 * gRPC
 * PostgreSQL (Supabase)
 * Docker
@@ -51,6 +58,7 @@ PostgreSQL (Supabase)
 
 * Angular
 * Responsive UI (Card-based layout)
+* Route Guards
 
 ### Infrastructure
 
@@ -61,12 +69,13 @@ PostgreSQL (Supabase)
 
 ## 🔑 Key Features
 
+* JWT-based Authentication & Authorization
+* User Signup, Login & Logout
+* Bookmark CRUD Operations
 * Microservices architecture (REST + gRPC)
-* Distributed system simulation with multiple services
-* Clean API design with proper layering
 * Asynchronous service communication via gRPC
-* Production-style deployment across multiple platforms
-* Database connection retry mechanism for reliability
+* Production-style deployment across
+* Database Connection Retry Mechanism
 
 ---
 
@@ -75,8 +84,9 @@ PostgreSQL (Supabase)
 * Separate **API service** and **Preview service** for better modularity
 * gRPC used for efficient internal communication
 * Stateless backend services
-* Designed for horizontal scalability
-* Handles network failures with retry logic
+* JWT-based authentication workflow
+* Clear separation of concerns
+* Database retry mechanism for reliability
 
 ---
 
@@ -122,6 +132,13 @@ ng serve
 
 ## 🧪 API Endpoints
 
+### Authentication
+| Method | Endpoint       | Description       |
+| ------ | -------------- | ----------------- |
+| POST   | /signup        | Register new user |
+| POST   | /login         | Authenticate user |
+
+### Bookmarks
 | Method | Endpoint       | Description     |
 | ------ | -------------- | --------------- |
 | GET    | /bookmarks     | Fetch bookmarks |
@@ -133,11 +150,10 @@ ng serve
 
 ## 🚀 Future Improvements
 
-* User authentication (multi-user support)
+* Password Reset Flow
 * Bookmark categorization / tagging
-* Rate limiting
-* Caching layer (Redis)
-* CI/CD pipeline
+* Bookmark search and filtering
+* Pagination and sort functionality
 
 ---
 
@@ -145,9 +161,11 @@ ng serve
 
 * Building microservices in Go
 * gRPC communication between services
-* Real-world deployment challenges (Docker, networking, CORS)
-* Handling cloud limitations (IPv4/IPv6, cold starts)
-* Structuring scalable backend systems
+* JWT Authentication & Authorization
+* Angular Route Guards & Form Validation
+* Docker-Based Development
+* Handling Networking, CORS, and Production Challenges
+* Designing Scalable Backend Architectures
 
 ---
 
@@ -157,3 +175,5 @@ ng serve
 * Email: [singh.suraj1025@gmail.com](mailto:singh.suraj1025@gmail.com)
 
 ---
+
+⭐ If you found this project interesting, consider giving the repository a star.
