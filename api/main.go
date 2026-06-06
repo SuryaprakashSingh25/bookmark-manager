@@ -40,6 +40,8 @@ func main() {
 
 	r.POST("/signup", handlers.Signup)
 	r.POST("/login", handlers.Login)
+	r.POST("/forgot-password", handlers.ForgotPassword)
+	r.POST("/reset-password", handlers.ResetPassword)
 
 	authRoutes := r.Group("/")
 	authRoutes.Use(middleware.AuthMiddleware())

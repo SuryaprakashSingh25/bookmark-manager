@@ -12,6 +12,9 @@ type Config struct {
 	DBURL           string
 	GRPCPreviewAddr string
 	JWTSecret       string
+	SMTPEmail       string
+	SMTPPassword    string
+	FrontendURL     string
 }
 
 var AppConfig Config
@@ -28,5 +31,8 @@ func LoadConfig() {
 		DBURL:           os.Getenv("DB_URL"),
 		GRPCPreviewAddr: os.Getenv("GRPC_PREVIEW_ADDR"),
 		JWTSecret:       os.Getenv("JWT_SECRET"),
+		SMTPEmail:       os.Getenv("SMTP_EMAIL"),
+		SMTPPassword:    os.Getenv("SMTP_PASSWORD"),
+		FrontendURL:     os.Getenv("FRONTEND_URL"),
 	}
 }
