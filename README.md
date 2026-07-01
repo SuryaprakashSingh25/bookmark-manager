@@ -1,6 +1,6 @@
 # 🔖 Bookmark Manager
 
-A full-stack distributed bookmark management application built with **Go, Angular, gRPC, PostgreSQL, and JWT Authentication**. The project demonstrates microservices architecture, secure user authentication, and modern frontend/backend development practices.
+A production-style full-stack bookmark management application built with **Go, Angular, gRPC, PostgreSQL, JWT Authentication, and Docker**. The project demonstrates secure authentication, distributed system design, and communication between REST and gRPC services.
 
 ---
 
@@ -8,6 +8,7 @@ A full-stack distributed bookmark management application built with **Go, Angula
 
 * Frontend: https://bookmark-frontend-rho.vercel.app/
 * Backend API: https://bookmark-backend-h81i.onrender.com/bookmarks
+* **Note**: The password reset functionality is fully implemented. However, the live deployment on Render's free tier cannot send password reset emails because outbound SMTP connections are restricted. The feature works correctly in local development.
 
 ---
 
@@ -17,29 +18,32 @@ Bookmark Manager is a production-style distributed application that allows users
 
 The application follows a microservices architecture where a REST API communicates with a dedicated gRPC service for bookmark preview generation.
 
-Users can:
-
-* Create an account and securely log in
-* Add bookmarks with title & description
-* View bookmarks in a clean card-based UI
-* Delete bookmarks
-* Preview bookmark metadata through a gRPC service
-* Access protected features using JWT-based authentication
+### Features
+* User Registration
+* Secure Login
+* JWT Authentication & Authorization
+* Password Reset (Email-based)
+* Create Bookmarks
+* View Bookmarks
+* Delete Bookmarks
+* Automatic Bookmark Preview Generation
+* Protected Routes
+* Responsive UI
 
 ---
 
 ## 🏗️ Architecture
 
 ```text
-Angular (Vercel)
-        ↓
-JWT Authentication
-        ↓
-Go REST API (Render)
-        ↓
-gRPC Preview Service
-        ↓
-PostgreSQL (Supabase)
+                Angular Frontend (Vercel)
+                        ↓
+                JWT Authentication
+                        ↓
+                Go REST API (Gin + Render)
+                ↓                        ↓
+
+gRPC Preview Service                 PostgreSQL (Supabase)
+
 ```
 
 ---
@@ -48,7 +52,8 @@ PostgreSQL (Supabase)
 
 ### Backend
 
-* Go (Gin)
+* Go
+* Gin
 * JWT Authentication
 * gRPC
 * PostgreSQL (Supabase)
@@ -62,31 +67,72 @@ PostgreSQL (Supabase)
 
 ### Infrastructure
 
-* Render (Backend Deployment)
-* Vercel (Frontend Deployment)
+* Render 
+* Vercel
+* Supabase
 
 ---
 
 ## 🔑 Key Features
 
-* JWT-based Authentication & Authorization
-* User Signup, Login & Logout
-* Bookmark CRUD Operations
-* Microservices architecture (REST + gRPC)
-* Asynchronous service communication via gRPC
-* Production-style deployment across
-* Database Connection Retry Mechanism
+### Authentication
+* User Signup
+* User Login
+* JWT-based Authorization
+* Password Hashing using bcrypt
+* Password Reset via Email
+* Protected API Endpoints
+  
+### Bookmark Management
+* Create Bookmark
+* Fetch User Bookmarks
+* Delete Bookmark
+* Preview Metadata through gRPC Service
+
+### Backend Design
+* REST API separated from Preview Service
+* Internal communication using gRPC
+* Stateless Authentication using JWT
+* Database Retry Mechanism
+* Clean layered architecture (Handlers → Services → Repository)
 
 ---
 
 ## 🧩 System Design Highlights
 
-* Separate **API service** and **Preview service** for better modularity
-* gRPC used for efficient internal communication
-* Stateless backend services
-* JWT-based authentication workflow
-* Clear separation of concerns
-* Database retry mechanism for reliability
+* Distributed microservices architecture
+* Separation of concerns
+* Secure authentication flow
+* Internal service communication using gRPC
+* Stateless backend
+* Scalable backend design
+* Production deployment across multiple cloud providers
+
+---
+
+## 📸 Screenshots
+
+## 📸 Screenshots
+
+<h3>Login</h3>
+
+<img src="screenshots/login.png" width="800">
+
+<h3>Register</h3>
+
+<img src="screenshots/register.png" width="800">
+
+<h3>Dashboard</h3>
+
+<img src="screenshots/dashboard.png" width="800">
+
+<h3>Forgot Password</h3>
+
+<img src="screenshots/forgot-password.png" width="800">
+
+<h3>Reset Password</h3>
+
+<img src="screenshots/reset-password.png" width="800">
 
 ---
 
@@ -133,10 +179,12 @@ ng serve
 ## 🧪 API Endpoints
 
 ### Authentication
-| Method | Endpoint       | Description       |
-| ------ | -------------- | ----------------- |
-| POST   | /signup        | Register new user |
-| POST   | /login         | Authenticate user |
+| Method | Endpoint         | Description               |
+| ------ | ---------------- | ------------------------- |
+| POST   | /signup          | Register new user         |
+| POST   | /login           | Authenticate user         |
+| POST	 | /forgot-password | Send Password Reset Email |
+| POST	 | /reset-password  | Reset Password            |
 
 ### Bookmarks
 | Method | Endpoint       | Description     |
@@ -150,22 +198,28 @@ ng serve
 
 ## 🚀 Future Improvements
 
-* Password Reset Flow
-* Bookmark categorization / tagging
-* Bookmark search and filtering
-* Pagination and sort functionality
+* Bookmark Categories
+* Search & Filtering
+* Pagination
+* Edit Bookmarks
 
 ---
 
 ## 💡 What I Learned
 
-* Building microservices in Go
-* gRPC communication between services
+This project helped me gain hands-on experience with:
+
+* Designing distributed backend systems
+* Building REST APIs in Go
+* Developing gRPC services
 * JWT Authentication & Authorization
-* Angular Route Guards & Form Validation
-* Docker-Based Development
-* Handling Networking, CORS, and Production Challenges
-* Designing Scalable Backend Architectures
+* Password Hashing with bcrypt
+* Secure Password Reset Flow
+* PostgreSQL integration
+* Route Guards
+* Docker-based development
+* Deploying applications across Render, Vercel, and Supabase
+* Handling CORS, networking, and production deployment challenges
 
 ---
 
