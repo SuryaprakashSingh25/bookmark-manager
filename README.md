@@ -6,9 +6,8 @@ A production-style full-stack bookmark management application built with **Go, A
 
 ## 🌐 Live Demo
 
-* Frontend: https://bookmark-frontend-rho.vercel.app/
-* Backend API: https://bookmark-backend-h81i.onrender.com/bookmarks
-* **Note**: The password reset functionality is fully implemented. However, the live deployment on Render's free tier cannot send password reset emails because outbound SMTP connections are restricted. The feature works correctly in local development.
+* https://bookmark-frontend-rho.vercel.app/
+> **Note:** Password reset functionality is fully implemented. The live deployment uses Render's free tier, which restricts outbound SMTP connections, so password reset emails are unavailable in the hosted demo. The feature works correctly in local development.
 
 ---
 
@@ -29,6 +28,7 @@ The application follows a microservices architecture where a REST API communicat
 * Automatic Bookmark Preview Generation
 * Protected Routes
 * Responsive UI
+* Automatic Database Connection Retry
 
 ---
 
@@ -36,13 +36,16 @@ The application follows a microservices architecture where a REST API communicat
 
 ```text
                 Angular Frontend (Vercel)
-                        ↓
-                JWT Authentication
-                        ↓
-                Go REST API (Gin + Render)
-                ↓                        ↓
-
-gRPC Preview Service                 PostgreSQL (Supabase)
+                          │
+                          ▼
+                  JWT Authentication
+                          │
+                          ▼
+                  Go REST API (Render)
+                    │            │
+                    ▼            ▼
+              gRPC Preview    PostgreSQL
+                 Service      (Supabase)
 
 ```
 
@@ -109,8 +112,6 @@ gRPC Preview Service                 PostgreSQL (Supabase)
 * Production deployment across multiple cloud providers
 
 ---
-
-## 📸 Screenshots
 
 ## 📸 Screenshots
 
