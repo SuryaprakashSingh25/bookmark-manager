@@ -85,7 +85,7 @@ func (es *EmailService) sendEmail(to, subject, body string) error {
 
 	// Gmail SMTP
 	smtpHost := "smtp.gmail.com"
-	smtpPort := "465"
+	smtpPort := "587"
 
 	// Construct headers
 	headers := fmt.Sprintf("From: %s\r\nTo: %s\r\nSubject: %s\r\nMIME-Version: 1.0\r\nContent-Type: text/html; charset=\"UTF-8\"\r\n\r\n", from, to, subject)

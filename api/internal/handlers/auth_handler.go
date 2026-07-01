@@ -136,14 +136,12 @@ func ForgotPassword(c *gin.Context) {
 		return
 	}
 
-	// Send email with reset link asynchronously so SMTP/network timeouts
-	// don't block the HTTP response. Errors are logged for debugging.
 	emailService := services.NewEmailService()
-	go func(email string, token string) {
-		if err := emailService.SendPasswordResetEmail(email, token); err != nil {
-			log.Printf("Failed to send reset email: %v", err)
-		}
-	}(user.Email, resetToken)
+	err = emailService.SendPasswordResetEmail(user.Email, resetToken)
+	if err != nil {
+		log.Printf("Failed to send reset email: %v", err)
+		// Still return success to user (security: don't leak if email failed)
+	}
 
 	// Always return success message
 	c.JSON(http.StatusOK, gin.H{
